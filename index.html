@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HISAB LIBRARY - Professional Library Management System</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manjari:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'Manjari', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    </style>
+
+    <!-- Firebase Compat SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col overflow-x-hidden">
+
+    <!-- Header Section -->
+    <header class="bg-indigo-900 text-white shadow-md sticky top-0 z-30 py-2 sm:py-3">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-0">
+                <div class="flex items-center justify-between w-full sm:w-auto">
+                    <div class="flex items-center space-x-2.5">
+                        <div class="bg-[#5a1827] p-2 rounded-xl shadow-lg flex items-center justify-center border border-[#7a2236]">
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M2 6l10 4 10-4M2 6v12l10 4 10-4V6M12 10v12" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M6 8l4 1.5M14 9.5l4-1.5M6 11l4 1.5M14 12.5l4-1.5" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h1 class="text-base sm:text-xl font-bold tracking-tight text-white leading-tight">HISAB LIBRARY</h1>
+                            <p class="text-[10px] sm:text-xs text-indigo-200">Cloud Live Sync System</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto space-x-2 pt-1 sm:pt-0 border-t border-indigo-800/60 sm:border-0">
+                    <div class="flex items-center space-x-1.5 bg-indigo-800/85 px-2.5 py-1 rounded-lg border border-indigo-700 text-[11px] sm:text-xs">
+                        <i class="fa-solid fa-user-circle text-indigo-300"></i>
+                        <span id="currentUserNameDisplay" class="font-medium text-indigo-100 truncate max-w-[90px] sm:max-w-none">Guest User</span>
+                    </div>
+
+                    <button id="adminLoginBtn" onclick="openAdminLoginModal()" class="flex items-center space-x-1 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 text-white px-2.5 py-1 sm:py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold shadow transition cursor-pointer">
+                        <i class="fa-solid fa-lock text-[10px] sm:text-xs"></i>
+                        <span>Admin</span>
+                    </button>
+                    <button id="adminLogoutBtn" onclick="logoutAdmin()" class="hidden flex items-center space-x-1 bg-rose-600 hover:bg-rose-700 text-white px-2.5 py-1 sm:py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold shadow transition cursor-pointer">
+                        <i class="fa-solid fa-unlock text-[10px] sm:text-xs"></i>
+                        <span>Logout</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 flex-grow w-full">
+        <!-- Stats Dashboard -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4 mb-4 sm:mb-6">
+            <div class="bg-white p-3 sm:p-4 rounded-xl shadow-sm border border-slate-200/80 flex items-center justify-between">
+                <div>
+                    <p class="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-slate-400">Available Books</p>
+                    <h3 id="statAvailableBooks" class="text-xl sm:text-2xl font-bold text-emerald-600 mt-0.5">0</h3>
+                </div>
+                <div class="p-2 sm:p-3 bg-emerald-50 rounded-xl text-emerald-600"><i class="fa-solid fa-book-open text-base sm:text-xl"></i></div>
+            </div>
+            <div class="bg-white p-3 sm:p-4 rounded-xl shadow-sm border border-slate-200/80 flex items-center justify-between">
+                <div>
+                    <p class="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-slate-400">Issued Books</p>
+                    <h3 id="statIssuedBooks" class="text-xl sm:text-2xl font-bold text-amber-600 mt-0.5">0</h3>
+                </div>
+                <div class="p-2 sm:p-3 bg-amber-50 rounded-xl text-amber-600"><i class="fa-solid fa-book-bookmark text-base sm:text-xl"></i></div>
+            </div>
+            <div class="bg-white p-3 sm:p-4 rounded-xl shadow-sm border border-slate-200/80 flex items-center justify-between">
+                <div>
+                    <p class="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-slate-400">Categories</p>
+                    <h3 id="statCategories" class="text-xl sm:text-2xl font-bold text-indigo-600 mt-0.5">0</h3>
+                </div>
+                <div class="p-2 sm:p-3 bg-indigo-50 rounded-xl text-indigo-600"><i class="fa-solid fa-layer-group text-base sm:text-xl"></i></div>
+            </div>
+            <div class="bg-white p-3 sm:p-4 rounded-xl shadow-sm border border-slate-200/80 flex items-center justify-between">
+                <div>
+                    <p class="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-slate-400">Total Collection</p>
+                    <h3 id="statTotalBooks" class="text-xl sm:text-2xl font-bold text-blue-600 mt-0.5">0</h3>
+                </div>
+                <div class="p-2 sm:p-3 bg-blue-50 rounded-xl text-blue-600"><i class="fa-solid fa-books text-base sm:text-xl"></i></div>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs & Admin Actions -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200/80 p-2 mb-4 sm:mb-6 flex flex-col sm:flex-row gap-2 justify-between items-center">
+            <div class="flex w-full sm:w-auto space-x-1 sm:space-x-2">
+                <button id="tabCatalogBtn" onclick="switchTab('catalog')" class="flex-1 sm:flex-none px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-colors flex items-center justify-center space-x-1.5 bg-indigo-600 text-white cursor-pointer">
+                    <i class="fa-solid fa-list-ul text-xs"></i><span>Book Catalog</span>
+                </button>
+                <button id="tabIssuedBtn" onclick="switchTab('issued')" class="flex-1 sm:flex-none px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors flex items-center justify-center space-x-1.5 cursor-pointer">
+                    <i class="fa-solid fa-clock-rotate-left text-xs"></i><span>Issued Records</span>
+                </button>
+            </div>
+            <div id="adminActionButtons" class="hidden flex items-center space-x-2 w-full sm:w-auto justify-end">
+                <button onclick="openAddBookModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold shadow flex items-center space-x-1.5 transition cursor-pointer">
+                    <i class="fa-solid fa-plus"></i><span>Add Book</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Section Catalog -->
+        <div id="sectionCatalog" class="space-y-3 sm:space-y-4">
+            <div class="bg-white p-3 sm:p-4 rounded-xl shadow-sm border border-slate-200/80 flex flex-col md:flex-row gap-2.5 sm:gap-3 justify-between items-center">
+                <div class="relative w-full md:w-1/2">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                        <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                    </div>
+                    <input type="text" id="searchInput" oninput="filterBooks()" placeholder="Search books (English/മലയാളം)..." class="w-full pl-9 pr-3 py-2 border border-slate-300 rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                </div>
+                <div class="flex w-full md:w-auto items-center space-x-2 justify-between md:justify-end">
+                    <select id="categoryFilter" onchange="filterBooks()" class="flex-1 sm:flex-none border border-slate-300 rounded-lg text-xs sm:text-sm px-2.5 py-2 bg-white text-slate-700 outline-none">
+                        <option value="ALL">All Categories</option>
+                    </select>
+                    <select id="statusFilter" onchange="filterBooks()" class="flex-1 sm:flex-none border border-slate-300 rounded-lg text-xs sm:text-sm px-2.5 py-2 bg-white text-slate-700 outline-none">
+                        <option value="ALL">All Status</option>
+                        <option value="Available">Available</option>
+                        <option value="Issued">Issued</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="catalogGridContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4"></div>
+            <div id="emptyCatalogState" class="hidden bg-white p-8 sm:p-12 text-center rounded-xl border border-dashed border-slate-300">
+                <i class="fa-solid fa-book-xmark text-3xl sm:text-4xl text-slate-300 mb-2"></i>
+                <h3 class="text-sm sm:text-base font-medium text-slate-700">No Books Found</h3>
+            </div>
+        </div>
+
+        <!-- Section Issued -->
+        <div id="sectionIssued" class="hidden space-y-4">
+            <div class="bg-white p-3 sm:p-4 rounded-xl shadow-sm border border-slate-200/80">
+                <h2 class="text-base sm:text-lg font-bold text-slate-800 mb-3">Currently Issued Books</h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-600 text-[11px] sm:text-xs uppercase font-semibold border-b border-slate-200">
+                                <th class="py-2.5 px-3">Book No.</th>
+                                <th class="py-2.5 px-3">Title & Author</th>
+                                <th class="py-2.5 px-3">Borrower Name</th>
+                                <th class="py-2.5 px-3">Issue Date</th>
+                                <th id="tableHeaderActions" class="py-2.5 px-3 text-right hidden">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="issuedTableBody" class="divide-y divide-slate-200 text-xs sm:text-sm"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Login Modal -->
+    <div id="adminLoginModal" style="display: none;" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 border border-slate-100">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-base font-bold text-slate-800"><i class="fa-solid fa-lock text-amber-500 mr-2"></i>Admin Login</h3>
+                <button onclick="closeAdminLoginModal()" class="text-slate-
