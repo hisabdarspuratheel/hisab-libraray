@@ -4,177 +4,301 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HISAB LIBRARY - Professional Library Management System</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manjari:wght@400;700&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'Manjari', 'sans-serif'],
-                    }
+                    fontFamily: { sans: ['Inter', 'Manjari', 'sans-serif'] }
                 }
             }
         }
     </script>
-    <style>
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #f1f5f9; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-    </style>
-
-    <!-- Firebase Compat SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col overflow-x-hidden">
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
 
-    <!-- Header Section -->
-    <header class="bg-indigo-900 text-white shadow-md sticky top-0 z-30 py-2 sm:py-3">
-        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-            <div class="flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-0">
-                <div class="flex items-center justify-between w-full sm:w-auto">
-                    <div class="flex items-center space-x-2.5">
-                        <div class="bg-[#5a1827] p-2 rounded-xl shadow-lg flex items-center justify-center border border-[#7a2236]">
-                            <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M2 6l10 4 10-4M2 6v12l10 4 10-4V6M12 10v12" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M6 8l4 1.5M14 9.5l4-1.5M6 11l4 1.5M14 12.5l4-1.5" stroke-linecap="round"/>
-                            </svg>
-                        </div>
-                        <div>
-                            <h1 class="text-base sm:text-xl font-bold tracking-tight text-white leading-tight">HISAB LIBRARY</h1>
-                            <p class="text-[10px] sm:text-xs text-indigo-200">Cloud Live Sync System</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto space-x-2 pt-1 sm:pt-0 border-t border-indigo-800/60 sm:border-0">
-                    <div class="flex items-center space-x-1.5 bg-indigo-800/85 px-2.5 py-1 rounded-lg border border-indigo-700 text-[11px] sm:text-xs">
-                        <i class="fa-solid fa-user-circle text-indigo-300"></i>
-                        <span id="currentUserNameDisplay" class="font-medium text-indigo-100 truncate max-w-[90px] sm:max-w-none">Guest User</span>
-                    </div>
-
-                    <button id="adminLoginBtn" onclick="openAdminLoginModal()" class="flex items-center space-x-1 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 text-white px-2.5 py-1 sm:py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold shadow transition cursor-pointer">
-                        <i class="fa-solid fa-lock text-[10px] sm:text-xs"></i>
-                        <span>Admin</span>
-                    </button>
-                    <button id="adminLogoutBtn" onclick="logoutAdmin()" class="hidden flex items-center space-x-1 bg-rose-600 hover:bg-rose-700 text-white px-2.5 py-1 sm:py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold shadow transition cursor-pointer">
-                        <i class="fa-solid fa-unlock text-[10px] sm:text-xs"></i>
-                        <span>Logout</span>
-                    </button>
-                </div>
+    <header class="bg-indigo-950 text-white shadow-md sticky top-0 z-30 py-3">
+        <div class="max-w-7xl mx-auto px-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold">HISAB LIBRARY</h1>
+            <div class="flex items-center space-x-3">
+                <span id="currentUserNameDisplay" class="text-xs bg-indigo-900 px-3 py-1 rounded">Guest User</span>
+                <button id="adminLoginBtn" onclick="openAdminLoginModal()" class="bg-amber-500 hover:bg-amber-600 text-white px-3 py-1 rounded text-xs font-semibold cursor-pointer">Admin</button>
+                <button id="adminLogoutBtn" onclick="logoutAdmin()" class="hidden bg-rose-600 hover:bg-rose-700 text-white px-3 py-1 rounded text-xs font-semibold cursor-pointer">Logout</button>
             </div>
         </div>
     </header>
 
-    <!-- Main Content -->
-    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 flex-grow w-full">
-        <!-- Stats Dashboard -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4 mb-4 sm:mb-6">
-            <div class="bg-white p-3 sm:p-4 rounded-xl shadow-sm border border-slate-200/80 flex items-center justify-between">
-                <div>
-                    <p class="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-slate-400">Available Books</p>
-                    <h3 id="statAvailableBooks" class="text-xl sm:text-2xl font-bold text-emerald-600 mt-0.5">0</h3>
-                </div>
-                <div class="p-2 sm:p-3 bg-emerald-50 rounded-xl text-emerald-600"><i class="fa-solid fa-book-open text-base sm:text-xl"></i></div>
+    <div class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <p class="text-xs font-semibold text-slate-400 uppercase">Available Books</p>
+                <h3 id="statAvailableBooks" class="text-2xl font-bold text-emerald-600">0</h3>
             </div>
-            <div class="bg-white p-3 sm:p-4 rounded-xl shadow-sm border border-slate-200/80 flex items-center justify-between">
-                <div>
-                    <p class="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-slate-400">Issued Books</p>
-                    <h3 id="statIssuedBooks" class="text-xl sm:text-2xl font-bold text-amber-600 mt-0.5">0</h3>
-                </div>
-                <div class="p-2 sm:p-3 bg-amber-50 rounded-xl text-amber-600"><i class="fa-solid fa-book-bookmark text-base sm:text-xl"></i></div>
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <p class="text-xs font-semibold text-slate-400 uppercase">Issued Books</p>
+                <h3 id="statIssuedBooks" class="text-2xl font-bold text-amber-600">0</h3>
             </div>
-            <div class="bg-white p-3 sm:p-4 rounded-xl shadow-sm border border-slate-200/80 flex items-center justify-between">
-                <div>
-                    <p class="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-slate-400">Categories</p>
-                    <h3 id="statCategories" class="text-xl sm:text-2xl font-bold text-indigo-600 mt-0.5">0</h3>
-                </div>
-                <div class="p-2 sm:p-3 bg-indigo-50 rounded-xl text-indigo-600"><i class="fa-solid fa-layer-group text-base sm:text-xl"></i></div>
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <p class="text-xs font-semibold text-slate-400 uppercase">Categories</p>
+                <h3 id="statCategories" class="text-2xl font-bold text-indigo-600">0</h3>
             </div>
-            <div class="bg-white p-3 sm:p-4 rounded-xl shadow-sm border border-slate-200/80 flex items-center justify-between">
-                <div>
-                    <p class="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-slate-400">Total Collection</p>
-                    <h3 id="statTotalBooks" class="text-xl sm:text-2xl font-bold text-blue-600 mt-0.5">0</h3>
-                </div>
-                <div class="p-2 sm:p-3 bg-blue-50 rounded-xl text-blue-600"><i class="fa-solid fa-books text-base sm:text-xl"></i></div>
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <p class="text-xs font-semibold text-slate-400 uppercase">Total Collection</p>
+                <h3 id="statTotalBooks" class="text-2xl font-bold text-blue-600">0</h3>
             </div>
         </div>
 
-        <!-- Navigation Tabs & Admin Actions -->
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200/80 p-2 mb-4 sm:mb-6 flex flex-col sm:flex-row gap-2 justify-between items-center">
-            <div class="flex w-full sm:w-auto space-x-1 sm:space-x-2">
-                <button id="tabCatalogBtn" onclick="switchTab('catalog')" class="flex-1 sm:flex-none px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-colors flex items-center justify-center space-x-1.5 bg-indigo-600 text-white cursor-pointer">
-                    <i class="fa-solid fa-list-ul text-xs"></i><span>Book Catalog</span>
-                </button>
-                <button id="tabIssuedBtn" onclick="switchTab('issued')" class="flex-1 sm:flex-none px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors flex items-center justify-center space-x-1.5 cursor-pointer">
-                    <i class="fa-solid fa-clock-rotate-left text-xs"></i><span>Issued Records</span>
-                </button>
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-2 mb-6 flex justify-between items-center">
+            <div class="space-x-2">
+                <button onclick="switchTab('catalog')" id="tabCatalogBtn" class="px-4 py-2 rounded-lg text-sm font-semibold bg-indigo-600 text-white cursor-pointer">Book Catalog</button>
+                <button onclick="switchTab('issued')" id="tabIssuedBtn" class="px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 cursor-pointer">Issued Records</button>
             </div>
-            <div id="adminActionButtons" class="hidden flex items-center space-x-2 w-full sm:w-auto justify-end">
-                <button onclick="openAddBookModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold shadow flex items-center space-x-1.5 transition cursor-pointer">
-                    <i class="fa-solid fa-plus"></i><span>Add Book</span>
-                </button>
+            <div id="adminActionButtons" class="hidden">
+                <button onclick="openAddBookModal()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-semibold cursor-pointer"><i class="fa-solid fa-plus mr-1"></i> Add Book</button>
             </div>
         </div>
 
-        <!-- Section Catalog -->
-        <div id="sectionCatalog" class="space-y-3 sm:space-y-4">
-            <div class="bg-white p-3 sm:p-4 rounded-xl shadow-sm border border-slate-200/80 flex flex-col md:flex-row gap-2.5 sm:gap-3 justify-between items-center">
-                <div class="relative w-full md:w-1/2">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-                        <i class="fa-solid fa-magnifying-glass text-xs"></i>
-                    </div>
-                    <input type="text" id="searchInput" oninput="filterBooks()" placeholder="Search books (English/മലയാളം)..." class="w-full pl-9 pr-3 py-2 border border-slate-300 rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
-                </div>
-                <div class="flex w-full md:w-auto items-center space-x-2 justify-between md:justify-end">
-                    <select id="categoryFilter" onchange="filterBooks()" class="flex-1 sm:flex-none border border-slate-300 rounded-lg text-xs sm:text-sm px-2.5 py-2 bg-white text-slate-700 outline-none">
-                        <option value="ALL">All Categories</option>
-                    </select>
-                    <select id="statusFilter" onchange="filterBooks()" class="flex-1 sm:flex-none border border-slate-300 rounded-lg text-xs sm:text-sm px-2.5 py-2 bg-white text-slate-700 outline-none">
-                        <option value="ALL">All Status</option>
-                        <option value="Available">Available</option>
-                        <option value="Issued">Issued</option>
-                    </select>
-                </div>
+        <div id="sectionCatalog" class="space-y-4">
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex gap-3">
+                <input type="text" id="searchInput" oninput="filterBooks()" placeholder="Search books..." class="w-full px-3 py-2 border rounded-lg text-sm outline-none">
+                <select id="categoryFilter" onchange="filterBooks()" class="border px-3 py-2 rounded-lg text-sm bg-white"><option value="ALL">All Categories</option></select>
+                <select id="statusFilter" onchange="filterBooks()" class="border px-3 py-2 rounded-lg text-sm bg-white">
+                    <option value="ALL">All Status</option>
+                    <option value="Available">Available</option>
+                    <option value="Issued">Issued</option>
+                </select>
             </div>
-
-            <div id="catalogGridContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4"></div>
-            <div id="emptyCatalogState" class="hidden bg-white p-8 sm:p-12 text-center rounded-xl border border-dashed border-slate-300">
-                <i class="fa-solid fa-book-xmark text-3xl sm:text-4xl text-slate-300 mb-2"></i>
-                <h3 class="text-sm sm:text-base font-medium text-slate-700">No Books Found</h3>
-            </div>
+            <div id="catalogGridContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"></div>
         </div>
 
-        <!-- Section Issued -->
-        <div id="sectionIssued" class="hidden space-y-4">
-            <div class="bg-white p-3 sm:p-4 rounded-xl shadow-sm border border-slate-200/80">
-                <h2 class="text-base sm:text-lg font-bold text-slate-800 mb-3">Currently Issued Books</h2>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="bg-slate-50 text-slate-600 text-[11px] sm:text-xs uppercase font-semibold border-b border-slate-200">
-                                <th class="py-2.5 px-3">Book No.</th>
-                                <th class="py-2.5 px-3">Title & Author</th>
-                                <th class="py-2.5 px-3">Borrower Name</th>
-                                <th class="py-2.5 px-3">Issue Date</th>
-                                <th id="tableHeaderActions" class="py-2.5 px-3 text-right hidden">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="issuedTableBody" class="divide-y divide-slate-200 text-xs sm:text-sm"></tbody>
-                    </table>
-                </div>
-            </div>
+        <div id="sectionIssued" class="hidden bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+            <h2 class="text-lg font-bold mb-3">Issued Books</h2>
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="border-b text-xs text-slate-500 uppercase">
+                        <th class="p-2">Book No</th>
+                        <th class="p-2">Title</th>
+                        <th class="p-2">Borrower</th>
+                        <th class="p-2">Date</th>
+                        <th id="tableHeaderActions" class="p-2 text-right hidden">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="issuedTableBody" class="text-sm"></tbody>
+            </table>
         </div>
     </div>
 
-    <!-- Admin Login Modal -->
-    <div id="adminLoginModal" style="display: none;" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 border border-slate-100">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-base font-bold text-slate-800"><i class="fa-solid fa-lock text-amber-500 mr-2"></i>Admin Login</h3>
-                <button onclick="closeAdminLoginModal()" class="text-slate-
+    <!-- Modals -->
+    <div id="adminLoginModal" style="display: none;" class="fixed inset-0 bg-slate-900/50 flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-xl p-6 w-full max-w-sm">
+            <h3 class="font-bold mb-3">Admin Login</h3>
+            <input type="password" id="adminPasswordInput" placeholder="Password" class="w-full border px-3 py-2 rounded mb-3 text-sm outline-none">
+            <button onclick="verifyAdminLogin()" class="w-full bg-indigo-600 text-white py-2 rounded text-sm font-semibold cursor-pointer">Login</button>
+        </div>
+    </div>
+
+    <div id="addBookModal" style="display: none;" class="fixed inset-0 bg-slate-900/50 flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-xl p-6 w-full max-w-md space-y-3">
+            <h3 class="font-bold">Add Book</h3>
+            <input type="text" id="newBookNo" placeholder="Book Number" class="w-full border px-3 py-2 rounded text-sm">
+            <input type="text" id="newBookTitle" placeholder="Title" class="w-full border px-3 py-2 rounded text-sm">
+            <input type="text" id="newBookAuthor" placeholder="Author" class="w-full border px-3 py-2 rounded text-sm">
+            <input type="text" id="newBookCategory" placeholder="Category" class="w-full border px-3 py-2 rounded text-sm">
+            <button onclick="saveNewBook()" class="w-full bg-emerald-600 text-white py-2 rounded text-sm font-semibold cursor-pointer">Save</button>
+        </div>
+    </div>
+
+    <div id="issueBookModal" style="display: none;" class="fixed inset-0 bg-slate-900/50 flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-xl p-6 w-full max-w-md space-y-3">
+            <h3 class="font-bold">Issue Book</h3>
+            <input type="hidden" id="issueBookKey">
+            <input type="text" id="borrowerNameInput" placeholder="Borrower Name" class="w-full border px-3 py-2 rounded text-sm">
+            <button onclick="confirmIssueBook()" class="w-full bg-amber-600 text-white py-2 rounded text-sm font-semibold cursor-pointer">Confirm</button>
+        </div>
+    </div>
+
+    <script>
+        const firebaseConfig = { databaseURL: "https://hisab-library-default-rtdb.asia-southeast1.firebasedatabase.app" };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        let booksData = {};
+        let isAdminLoggedIn = false;
+        let activePath = 'books'; // Default
+
+        // Smart path detector for both 'books' and 'libraryData/books'
+        db.ref('/').on('value', (snapshot) => {
+            let rootVal = snapshot.val() || {};
+            if (rootVal.libraryData && rootVal.libraryData.books) {
+                activePath = 'libraryData/books';
+                booksData = rootVal.libraryData.books;
+            } else if (rootVal.books) {
+                activePath = 'books';
+                booksData = rootVal.books;
+            } else {
+                booksData = rootVal;
+            }
+
+            updateStats();
+            updateCategoryDropdowns();
+            filterBooks();
+        });
+
+        function updateStats() {
+            let books = Object.values(booksData).filter(b => b && typeof b === 'object');
+            let total = books.length;
+            let issued = books.filter(b => (b.status || b.bookStatus) === 'Issued').length;
+            let available = total - issued;
+            let cats = new Set(books.map(b => b.category || b.bookCategory || 'General')).size;
+
+            document.getElementById('statTotalBooks').textContent = total;
+            document.getElementById('statAvailableBooks').textContent = available;
+            document.getElementById('statIssuedBooks').textContent = issued;
+            document.getElementById('statCategories').textContent = cats;
+        }
+
+        function filterBooks() {
+            const query = (document.getElementById('searchInput').value || '').toLowerCase();
+            const cat = document.getElementById('categoryFilter').value;
+            const status = document.getElementById('statusFilter').value;
+
+            let filtered = Object.entries(booksData).filter(([key, book]) => {
+                if (!book || typeof book !== 'object') return false;
+                let title = (book.title || book.bookTitle || '').toLowerCase();
+                let author = (book.author || book.bookAuthor || '').toLowerCase();
+                let num = (book.bookNum || book.bookNo || book.number || '').toLowerCase();
+                let category = book.category || book.bookCategory || 'General';
+                let currentStatus = book.status || book.bookStatus || 'Available';
+
+                return (title.includes(query) || author.includes(query) || num.includes(query)) &&
+                       (cat === 'ALL' || category === cat) &&
+                       (status === 'ALL' || currentStatus === status);
+            });
+
+            renderCatalog(filtered);
+            renderIssuedList();
+        }
+
+        function renderCatalog(entries) {
+            const container = document.getElementById('catalogGridContainer');
+            container.innerHTML = '';
+            entries.forEach(([key, book]) => {
+                let displayNum = book.bookNum || book.bookNo || book.number || key;
+                let title = book.title || book.bookTitle || 'Untitled Book';
+                let author = book.author || book.bookAuthor || 'Unknown Author';
+                let category = book.category || book.bookCategory || 'General';
+                let currentStatus = book.status || book.bookStatus || 'Available';
+                let isIssued = currentStatus === 'Issued';
+
+                let actionBtn = isAdminLoggedIn ? (isIssued ? 
+                    `<button onclick="returnBook('${key}')" class="bg-emerald-600 text-white px-2 py-1 rounded text-xs cursor-pointer">Return</button>` : 
+                    `<button onclick="openIssueModal('${key}')" class="bg-amber-600 text-white px-2 py-1 rounded text-xs cursor-pointer">Issue</button>`) : '';
+
+                let card = document.createElement('div');
+                card.className = "bg-white p-4 rounded-xl border border-slate-200 flex flex-col justify-between";
+                card.innerHTML = `
+                    <div>
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded">${displayNum}</span>
+                            <span class="px-2 py-0.5 text-[10px] font-semibold rounded-full ${isIssued ? 'bg-amber-100 text-amber-700' : 'bg-emerald-100 text-emerald-700'}">${currentStatus}</span>
+                        </div>
+                        <h4 class="font-bold text-sm mt-2">${title}</h4>
+                        <p class="text-xs text-slate-500">${author}</p>
+                    </div>
+                    <div class="flex justify-between items-center mt-4 pt-2 border-t">
+                        <span class="text-xs bg-slate-100 px-2 py-0.5 rounded">${category}</span>
+                        ${actionBtn}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function renderIssuedList() {
+            const tbody = document.getElementById('issuedTableBody');
+            const th = document.getElementById('tableHeaderActions');
+            tbody.innerHTML = '';
+            if(isAdminLoggedIn) th.classList.remove('hidden'); else th.classList.add('hidden');
+
+            let issued = Object.entries(booksData).filter(([k, b]) => b && typeof b === 'object' && (b.status || b.bookStatus) === 'Issued');
+            issued.forEach(([key, book]) => {
+                let displayNum = book.bookNum || book.bookNo || book.number || key;
+                let title = book.title || book.bookTitle || 'Untitled';
+                let author = book.author || book.bookAuthor || 'Unknown';
+                let actionTd = isAdminLoggedIn ? `<td class="p-2 text-right"><button onclick="returnBook('${key}')" class="bg-emerald-600 text-white px-2 py-1 rounded text-xs cursor-pointer">Return</button></td>` : '';
+                tbody.innerHTML += `<tr class="border-b"><td class="p-2 font-semibold text-indigo-600">${displayNum}</td><td class="p-2"><div>${title}</div><div class="text-xs text-slate-400">${author}</div></td><td class="p-2 text-indigo-600 font-semibold">${book.issuedTo || ''}</td><td class="p-2">${book.issueDate || ''}</td>${actionTd}</tr>`;
+            });
+        }
+
+        function updateCategoryDropdowns() {
+            const select = document.getElementById('categoryFilter');
+            let cats = new Set(Object.values(booksData).filter(b => b && typeof b === 'object').map(b => b.category || b.bookCategory || 'General'));
+            select.innerHTML = '<option value="ALL">All Categories</option>';
+            cats.forEach(c => { if(c) select.innerHTML += `<option value="${c}">${c}</option>`; });
+        }
+
+        function switchTab(tab) {
+            document.getElementById('sectionCatalog').classList.toggle('hidden', tab !== 'catalog');
+            document.getElementById('sectionIssued').classList.toggle('hidden', tab !== 'issued');
+        }
+
+        function openAdminLoginModal() { document.getElementById('adminLoginModal').style.display = 'flex'; }
+        function closeAdminLoginModal() { document.getElementById('adminLoginModal').style.display = 'none'; }
+        function verifyAdminLogin() {
+            if(document.getElementById('adminPasswordInput').value === '123321') {
+                isAdminLoggedIn = true;
+                document.getElementById('currentUserNameDisplay').textContent = 'Admin';
+                document.getElementById('adminLoginBtn').classList.add('hidden');
+                document.getElementById('adminLogoutBtn').classList.remove('hidden');
+                document.getElementById('adminActionButtons').classList.remove('hidden');
+                closeAdminLoginModal();
+                filterBooks();
+            } else { alert('Wrong Password'); }
+        }
+        function logoutAdmin() {
+            isAdminLoggedIn = false;
+            document.getElementById('currentUserNameDisplay').textContent = 'Guest User';
+            document.getElementById('adminLogoutBtn').classList.add('hidden');
+            document.getElementById('adminLoginBtn').classList.remove('hidden');
+            document.getElementById('adminActionButtons').classList.add('hidden');
+            filterBooks();
+        }
+
+        function openAddBookModal() { document.getElementById('addBookModal').style.display = 'flex'; }
+        function closeAddBookModal() { document.getElementById('addBookModal').style.display = 'none'; }
+        function saveNewBook() {
+            let title = document.getElementById('newBookTitle').value.trim();
+            if(!title) return alert('Enter title');
+            db.ref(activePath).push({
+                bookNo: document.getElementById('newBookNo').value.trim() || 'N/A',
+                title: title,
+                author: document.getElementById('newBookAuthor').value.trim() || 'Unknown',
+                category: document.getElementById('newBookCategory').value.trim() || 'General',
+                status: 'Available'
+            }, () => closeAddBookModal());
+        }
+
+        function openIssueModal(key) {
+            document.getElementById('issueBookKey').value = key;
+            document.getElementById('issueBookModal').style.display = 'flex';
+        }
+        function closeIssueBookModal() { document.getElementById('issueBookModal').style.display = 'none'; }
+        function confirmIssueBook() {
+            let key = document.getElementById('issueBookKey').value;
+            let borrower = document.getElementById('borrowerNameInput').value.trim();
+            if(!borrower) return alert('Enter borrower name');
+            db.ref(activePath + '/' + key).update({ status: 'Issued', issuedTo: borrower, issueDate: new Date().toLocaleDateString() }, () => closeIssueBookModal());
+        }
+
+        function returnBook(key) {
+            if(confirm('Return book?')) {
+                db.ref(activePath + '/' + key).update({ status: 'Available', issuedTo: null, issueDate: null });
+            }
+        }
+    </script>
+</body>
+</html>
