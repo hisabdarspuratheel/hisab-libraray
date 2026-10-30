@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HISAB LIBRARY - Professional Library Management System</title>
+    <title>HISAB LIBRARY & QUTHUBKHANA - Digital Catalog System</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts Inter & Malayalam Support -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manjari:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts Inter, Manjari & Arabic Amiri -->
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Manjari:wght@400;700&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
                         sans: ['Inter', 'Manjari', 'sans-serif'],
+                        arabic: ['Amiri', 'serif'],
                     }
                 }
             }
@@ -43,10 +44,20 @@
                             </svg>
                         </div>
                         <div>
-                            <h1 class="text-base sm:text-xl font-bold tracking-tight text-white leading-tight">HISAB LIBRARY</h1>
-                            <p class="text-[10px] sm:text-xs text-indigo-200">Digital Catalog System</p>
+                            <h1 id="brandTitle" class="text-base sm:text-xl font-bold tracking-tight text-white leading-tight">HISAB LIBRARY</h1>
+                            <p id="brandSubtitle" class="text-[10px] sm:text-xs text-indigo-200">Digital Catalog System</p>
                         </div>
                     </div>
+                </div>
+
+                <!-- Section Selector Switch -->
+                <div class="flex items-center space-x-1 bg-indigo-950/70 p-1 rounded-xl border border-indigo-700/60">
+                    <button onclick="switchSection('library')" id="sectionLibBtn" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-amber-500 text-indigo-950 shadow cursor-pointer">
+                        <i class="fa-solid fa-book-bookmark mr-1"></i> Library
+                    </button>
+                    <button onclick="switchSection('quthubkhana')" id="sectionQuthubBtn" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all text-indigo-200 hover:text-white cursor-pointer">
+                        <i class="fa-solid fa-kaaba mr-1"></i> Quthubkhana (عربي)
+                    </button>
                 </div>
 
                 <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto space-x-2 pt-1 sm:pt-0 border-t border-indigo-800/60 sm:border-0">
@@ -151,7 +162,7 @@
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
                         <i class="fa-solid fa-magnifying-glass text-xs"></i>
                     </div>
-                    <input type="text" id="searchInput" oninput="filterBooks()" placeholder="Search books (English/മലയാളം)..." class="w-full pl-9 pr-3 py-2 border border-slate-300 rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                    <input type="text" id="searchInput" oninput="filterBooks()" placeholder="Search books (English/മലയാളം/العربية)..." class="w-full pl-9 pr-3 py-2 border border-slate-300 rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
                 </div>
 
                 <div class="flex w-full md:w-auto items-center space-x-2 justify-between md:justify-end">
@@ -260,7 +271,7 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div>
                                 <label class="block text-[11px] font-semibold text-slate-600 uppercase mb-1">Book Number *</label>
-                                <input type="text" id="addBookNum" required placeholder="HL#IB91" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs sm:text-sm outline-none">
+                                <input type="text" id="addBookNum" required placeholder="HL#91" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs sm:text-sm outline-none">
                             </div>
                             <div>
                                 <label class="block text-[11px] font-semibold text-slate-600 uppercase mb-1">Category *</label>
@@ -272,607 +283,13 @@
 
                         <div>
                             <label class="block text-[11px] font-semibold text-slate-600 uppercase mb-1">Book Title *</label>
-                            <input type="text" id="addBookTitle" required placeholder="പുസ്തകത്തിന്റെ പേര്..." class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs sm:text-sm outline-none">
+                            <input type="text" id="addBookTitle" required placeholder="പുസ്തകത്തിന്റെ പേര് / الكتاب..." class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs sm:text-sm outline-none">
                         </div>
 
                         <div>
                             <label class="block text-[11px] font-semibold text-slate-600 uppercase mb-1">Author Name *</label>
-                            <input type="text" id="addBookAuthor" required placeholder="എഴുത്തുകാരന്റെ പേര്..." class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs sm:text-sm outline-none">
+                            <input type="text" id="addBookAuthor" required placeholder="എഴുത്തുകാരന്റെ പേര് / المؤلف..." class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs sm:text-sm outline-none">
                         </div>
 
                         <div class="pt-2 flex justify-end">
-                            <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded-lg text-xs sm:text-sm flex items-center space-x-2 shadow cursor-pointer">
-                                <i class="fa-solid fa-floppy-disk"></i>
-                                <span>Save Book</span>
-                            </button>
-                        </div>
-                    </form>
-                </div>
-
-                <div class="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-slate-200/80 flex flex-col justify-between">
-                    <div>
-                        <h3 class="text-sm sm:text-base font-bold text-slate-800 mb-3 flex items-center space-x-2">
-                            <i class="fa-solid fa-tags text-indigo-600"></i>
-                            <span>Manage Categories</span>
-                        </h3>
-                        <form id="addCategoryForm" onsubmit="handleAddCategory(event)" class="space-y-3 mb-4">
-                            <div class="flex space-x-2">
-                                <input type="text" id="newCategoryInput" required placeholder="New category..." class="flex-grow px-3 py-1.5 border border-slate-300 rounded-lg text-xs outline-none">
-                                <button type="submit" class="bg-slate-800 hover:bg-slate-900 text-white font-semibold px-3 py-1.5 rounded-lg text-xs cursor-pointer">Add</button>
-                            </div>
-                        </form>
-                        <div id="adminCategoryList" class="space-y-1.5 max-h-48 overflow-y-auto pr-1"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <footer class="bg-white border-t border-slate-200 py-4 mt-auto">
-        <div class="max-w-7xl mx-auto px-4 text-center text-[11px] sm:text-xs text-slate-500">
-            <p class="font-medium text-slate-600">HISAB LIBRARY - Digital Catalog System</p>
-            <p>&copy; 2026 HISAB LIBRARY System.</p>
-        </div>
-    </footer>
-
-    <!-- Admin Password Modal -->
-    <div id="adminModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl shadow-xl border border-slate-100 max-w-sm w-full p-5 space-y-3">
-            <div class="text-center">
-                <div class="w-10 h-10 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-2">
-                    <i class="fa-solid fa-lock text-lg"></i>
-                </div>
-                <h3 class="text-base font-bold text-slate-800">Admin Password</h3>
-            </div>
-            <form onsubmit="verifyAdminPassword(event)" class="space-y-3">
-                <input type="password" id="adminPassInput" required placeholder="Enter Password..." class="w-full px-3 py-2 border border-slate-300 rounded-xl text-center text-base tracking-widest outline-none">
-                <div class="flex space-x-2 pt-1">
-                    <button type="button" onclick="closeAdminLoginModal()" class="w-1/2 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-xs cursor-pointer">Cancel</button>
-                    <button type="submit" class="w-1/2 py-2 bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-xl text-xs shadow cursor-pointer">Login</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Issue Book Modal -->
-    <div id="issueBookModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl shadow-xl border border-slate-100 max-w-md w-full p-5 space-y-3">
-            <div class="flex justify-between items-start border-b border-slate-100 pb-2">
-                <div>
-                    <h3 class="text-sm sm:text-base font-bold text-slate-800">Issue Book</h3>
-                    <p id="issueModalBookTitle" class="text-xs text-indigo-600 font-medium"></p>
-                </div>
-                <button onclick="closeIssueModal()" class="text-slate-400 hover:text-slate-600 cursor-pointer">
-                    <i class="fa-solid fa-xmark text-base"></i>
-                </button>
-            </div>
-            <form onsubmit="confirmIssueBook(event)" class="space-y-3">
-                <input type="hidden" id="issueModalBookNum">
-                <div>
-                    <label class="block text-[11px] font-semibold text-slate-600 uppercase mb-1">Borrower Name *</label>
-                    <input type="text" id="issueBorrowerName" required placeholder="Enter borrower name..." class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs sm:text-sm outline-none">
-                </div>
-                <div>
-                    <label class="block text-[11px] font-semibold text-slate-600 uppercase mb-1">Issue Date</label>
-                    <input type="date" id="issueDate" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs sm:text-sm outline-none">
-                </div>
-                <div class="flex space-x-2 pt-2">
-                    <button type="button" onclick="closeIssueModal()" class="w-1/2 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-xs cursor-pointer">Cancel</button>
-                    <button type="submit" class="w-1/2 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl text-xs shadow cursor-pointer">Confirm Issue</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <div id="toastContainer" class="fixed bottom-3 right-3 z-50 flex flex-col space-y-2 pointer-events-none"></div>
-
-    <!-- Firebase SDKs -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, set, remove, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyDxPtRk6oNcnCF8mgkLnEwWmOd3Yx5TFh8",
-            authDomain: "hisab-library.firebaseapp.com",
-            databaseURL: "https://hisab-library-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "hisab-library",
-            storageBucket: "hisab-library.firebasestorage.app",
-            messagingSenderId: "27109205399",
-            appId: "1:27109205399:web:0f6e0387b0f95e28f550d2",
-            measurementId: "G-210CXQVMNF"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-
-        let booksData = {};
-        let categoriesData = ["IB-ISLAMIC BOOKS", "Computer Science", "Mathematics", "Science", "Literature", "History"];
-        let isAdminLoggedIn = false;
-        let isCategoryLocked = false;
-        let currentView = 'grid';
-        let activeTab = 'catalog';
-        let currentBorrowerName = localStorage.getItem('hisab_borrower_name') || 'Guest User';
-        let activePath = 'books';
-
-        document.getElementById('currentUserNameDisplay').textContent = currentBorrowerName;
-
-        // Smart Path Listener & Data Sync
-        onValue(ref(db, '/'), (snapshot) => {
-            const rootVal = snapshot.val() || {};
-            if (rootVal.libraryData && rootVal.libraryData.books) {
-                activePath = 'libraryData/books';
-                booksData = rootVal.libraryData.books;
-                if (rootVal.libraryData.categories) categoriesData = rootVal.libraryData.categories;
-            } else if (rootVal.books) {
-                activePath = 'books';
-                booksData = rootVal.books;
-                if (rootVal.categories) categoriesData = rootVal.categories;
-            } else {
-                activePath = 'books';
-                booksData = rootVal;
-            }
-            
-            const dynamicCats = new Set(categoriesData);
-            Object.values(booksData).forEach(b => {
-                if (b && b.category) dynamicCats.add(b.category);
-            });
-            categoriesData = Array.from(dynamicCats);
-
-            updateStats();
-            populateCategoryDropdowns();
-            filterBooks();
-            renderAdminCategories();
-        });
-
-        window.updateStats = function() {
-            const books = Object.values(booksData).filter(b => b && typeof b === 'object' && b.title);
-            const total = books.length;
-            const issued = books.filter(b => b.status === 'Issued').length;
-            const available = total - issued;
-            const cats = new Set(books.map(b => b.category || 'General')).size;
-
-            document.getElementById('statTotalBooks').textContent = total;
-            document.getElementById('statAvailableBooks').textContent = available;
-            document.getElementById('statIssuedBooks').textContent = issued;
-            document.getElementById('statCategories').textContent = cats;
-        }
-
-        window.populateCategoryDropdowns = function() {
-            const filterSelect = document.getElementById('categoryFilter');
-            const selectedVal = filterSelect.value;
-            filterSelect.innerHTML = '<option value="ALL">All Categories</option>';
-            categoriesData.forEach(cat => {
-                filterSelect.innerHTML += `<option value="${cat}">${cat}</option>`;
-            });
-            filterSelect.value = selectedVal;
-
-            const wrapper = document.getElementById('addBookCategoryWrapper');
-            if (isCategoryLocked) {
-                let options = '';
-                categoriesData.forEach(cat => {
-                    options += `<option value="${cat}">${cat}</option>`;
-                });
-                wrapper.innerHTML = `<select id="addBookCategory" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs sm:text-sm outline-none bg-white cursor-pointer">${options}</select>`;
-            } else {
-                wrapper.innerHTML = `<input type="text" id="addBookCategory" required placeholder="Category name..." class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs sm:text-sm outline-none">`;
-            }
-        }
-
-        window.toggleCategoryLock = function() {
-            isCategoryLocked = !isCategoryLocked;
-            const btn = document.getElementById('categoryLockButton');
-            const icon = document.getElementById('categoryLockIcon');
-            const text = document.getElementById('categoryLockText');
-            if (isCategoryLocked) {
-                btn.className = "bg-amber-600 hover:bg-amber-700 text-white px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1.5 shadow cursor-pointer";
-                icon.className = "fa-solid fa-lock text-xs";
-                text.textContent = "Lock Categories: ON";
-                showToast("Categories are now LOCKED to predefined list.", "success");
-            } else {
-                btn.className = "bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1.5 shadow cursor-pointer";
-                icon.className = "fa-solid fa-lock-open text-xs";
-                text.textContent = "Lock Categories: OFF";
-                showToast("Categories are UNLOCKED.", "info");
-            }
-            populateCategoryDropdowns();
-        }
-
-        window.filterBooks = function() {
-            const query = document.getElementById('searchInput').value.toLowerCase().trim();
-            const category = document.getElementById('categoryFilter').value;
-            const status = document.getElementById('statusFilter').value;
-
-            const entries = Object.entries(booksData).filter(([key, book]) => {
-                if (!book || typeof book !== 'object' || !book.title) return false;
-                const matchesQuery = !query || 
-                    (book.title && book.title.toLowerCase().includes(query)) ||
-                    (book.author && book.author.toLowerCase().includes(query)) ||
-                    (book.bookNum && book.bookNum.toLowerCase().includes(query));
-                
-                const matchesCategory = category === 'ALL' || book.category === category;
-                const matchesStatus = status === 'ALL' || (book.status || 'Available') === status;
-
-                return matchesQuery && matchesCategory && matchesStatus;
-            });
-
-            renderCatalog(entries);
-            renderIssuedList(entries);
-        }
-
-        window.renderCatalog = function(entries) {
-            const gridContainer = document.getElementById('catalogGridContainer');
-            const tableBody = document.getElementById('catalogTableBody');
-            const emptyState = document.getElementById('emptyCatalogState');
-
-            gridContainer.innerHTML = '';
-            tableBody.innerHTML = '';
-
-            if (entries.length === 0) {
-                emptyState.classList.remove('hidden');
-                return;
-            }
-            emptyState.classList.add('hidden');
-
-            entries.forEach(([key, book]) => {
-                const status = book.status || 'Available';
-                const isIssued = status === 'Issued';
-                const cat = book.category || 'General';
-
-                // Action button logic for grid card bottom
-                let actionButtonHtml = '';
-                if (isAdminLoggedIn) {
-                    if (isIssued) {
-                        actionButtonHtml = `<button onclick="returnBook('${key}')" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold py-2 rounded-lg transition-colors cursor-pointer flex items-center justify-center space-x-1"><i class="fa-solid fa-arrow-rotate-left"></i><span>Return Book</span></button>`;
-                    } else {
-                        actionButtonHtml = `<button onclick="openIssueModal('${key}', '${encodeURIComponent(book.title)}', '${book.bookNum}')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold py-2 rounded-lg transition-colors cursor-pointer flex items-center justify-center space-x-1"><i class="fa-solid fa-book-open-reader"></i><span>Issue Book</span></button>`;
-                    }
-                } else {
-                    if (isIssued) {
-                        if (book.issuedTo && currentBorrowerName && book.issuedTo.toLowerCase() === currentBorrowerName.toLowerCase()) {
-                            actionButtonHtml = `<button onclick="returnBook('${key}')" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold py-2 rounded-lg transition-colors cursor-pointer flex items-center justify-center space-x-1"><i class="fa-solid fa-arrow-rotate-left"></i><span>Return (My Book)</span></button>`;
-                        } else {
-                            actionButtonHtml = `<div class="w-full bg-amber-50 text-amber-800 border border-amber-200 text-xs font-medium py-1.5 rounded-lg text-center">Issued to ${book.issuedTo || 'Someone'}</div>`;
-                        }
-                    } else {
-                        actionButtonHtml = `<button onclick="quickIssue('${key}')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold py-2 rounded-lg transition-colors cursor-pointer flex items-center justify-center space-x-1"><i class="fa-solid fa-book-open-reader"></i><span>Issue Book</span></button>`;
-                    }
-                }
-
-                // Delete button for Admin only
-                const deleteBtnHtml = isAdminLoggedIn ? `<button onclick="deleteBook('${key}')" class="text-rose-400 hover:text-rose-600 p-1 cursor-pointer" title="Delete Book"><i class="fa-solid fa-trash text-xs"></i></button>` : '';
-
-                const card = document.createElement('div');
-                card.className = "bg-white p-3.5 sm:p-4 rounded-xl shadow-sm border border-slate-200/80 flex flex-col justify-between hover:shadow-md transition-shadow";
-                card.innerHTML = `
-                    <div>
-                        <div class="flex justify-between items-start mb-2">
-                            <span class="text-[11px] font-bold px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded-md">${book.bookNum || 'N/A'}</span>
-                            <div class="flex items-center space-x-2">
-                                <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full ${isIssued ? 'bg-amber-100 text-amber-700' : 'bg-emerald-100 text-emerald-700'}">${status}</span>
-                                ${deleteBtnHtml}
-                            </div>
-                        </div>
-                        <h3 class="font-bold text-sm sm:text-base text-slate-800 line-clamp-2 mb-1">${book.title}</h3>
-                        <p class="text-xs text-slate-500 line-clamp-1 mb-2">${book.author}</p>
-                        <span class="inline-block text-[11px] text-slate-600 bg-slate-100 px-2 py-0.5 rounded mb-3">${cat}</span>
-                    </div>
-                    <div class="pt-2 border-t border-slate-100">
-                        ${actionButtonHtml}
-                    </div>
-                `;
-                gridContainer.appendChild(card);
-
-                // Table Row Action
-                let tableActionHtml = '';
-                if (isAdminLoggedIn) {
-                    tableActionHtml = isIssued ? 
-                        `<button onclick="returnBook('${key}')" class="bg-emerald-600 text-white text-[11px] px-2.5 py-1 rounded cursor-pointer">Return</button>` :
-                        `<button onclick="openIssueModal('${key}', '${encodeURIComponent(book.title)}', '${book.bookNum}')" class="bg-indigo-600 text-white text-[11px] px-2.5 py-1 rounded cursor-pointer">Issue</button>`;
-                } else {
-                    tableActionHtml = !isIssued ? 
-                        `<button onclick="quickIssue('${key}')" class="bg-indigo-600 text-white text-[11px] px-2.5 py-1 rounded cursor-pointer">Borrow</button>` :
-                        (book.issuedTo && currentBorrowerName && book.issuedTo.toLowerCase() === currentBorrowerName.toLowerCase() ?
-                        `<button onclick="returnBook('${key}')" class="bg-emerald-600 text-white text-[11px] px-2.5 py-1 rounded cursor-pointer">Return</button>` :
-                        `<span class="text-xs text-slate-400">Issued</span>`);
-                }
-
-                const row = document.createElement('tr');
-                row.className = "hover:bg-slate-50 transition-colors";
-                row.innerHTML = `
-                    <td class="py-2.5 px-3 font-semibold text-indigo-600">${book.bookNum || 'N/A'}</td>
-                    <td class="py-2.5 px-3 font-medium text-slate-800">${book.title}</td>
-                    <td class="py-2.5 px-3 text-slate-600">${book.author}</td>
-                    <td class="py-2.5 px-3"><span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded text-[11px]">${cat}</span></td>
-                    <td class="py-2.5 px-3 text-center">
-                        <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold ${isIssued ? 'bg-amber-100 text-amber-700' : 'bg-emerald-100 text-emerald-700'}">${status}</span>
-                    </td>
-                    <td class="py-2.5 px-3 text-right flex items-center justify-end space-x-2">
-                        ${tableActionHtml}
-                        ${isAdminLoggedIn ? `<button onclick="deleteBook('${key}')" class="text-rose-500 hover:text-rose-700 p-1 cursor-pointer"><i class="fa-solid fa-trash text-xs"></i></button>` : ''}
-                    </td>
-                `;
-                tableBody.appendChild(row);
-            });
-        }
-
-        window.renderIssuedList = function() {
-            const issuedBody = document.getElementById('issuedTableBody');
-            const emptyIssued = document.getElementById('emptyIssuedState');
-            issuedBody.innerHTML = '';
-
-            const issuedEntries = Object.entries(booksData).filter(([k, b]) => b && b.status === 'Issued');
-            if (issuedEntries.length === 0) {
-                emptyIssued.classList.remove('hidden');
-                return;
-            }
-            emptyIssued.classList.add('hidden');
-
-            issuedEntries.forEach(([key, book]) => {
-                const isOwnerOrAdmin = isAdminLoggedIn || (book.issuedTo && currentBorrowerName && book.issuedTo.toLowerCase() === currentBorrowerName.toLowerCase());
-                const returnBtnHtml = isOwnerOrAdmin ? 
-                    `<button onclick="returnBook('${key}')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-semibold px-2.5 py-1 rounded shadow-xs cursor-pointer">Return Book</button>` :
-                    `<span class="text-xs text-slate-400 font-medium">Restricted to Borrower/Admin</span>`;
-
-                const row = document.createElement('tr');
-                row.className = "hover:bg-slate-50";
-                row.innerHTML = `
-                    <td class="py-2.5 px-3 font-semibold text-indigo-600">${book.bookNum || 'N/A'}</td>
-                    <td class="py-2.5 px-3">
-                        <div class="font-bold text-slate-800">${book.title}</div>
-                        <div class="text-[11px] text-slate-500">${book.author}</div>
-                    </td>
-                    <td class="py-2.5 px-3 font-medium text-slate-700">${book.issuedTo || 'Unknown'}</td>
-                    <td class="py-2.5 px-3 text-slate-600">${book.issueDate || 'N/A'}</td>
-                    <td class="py-2.5 px-3 text-right">
-                        ${returnBtnHtml}
-                    </td>
-                `;
-                issuedBody.appendChild(row);
-            });
-        }
-
-        window.toggleCatalogView = function(view) {
-            currentView = view;
-            const gridBtn = document.getElementById('viewGridBtn');
-            const tableBtn = document.getElementById('viewTableBtn');
-            const gridContainer = document.getElementById('catalogGridContainer');
-            const tableContainer = document.getElementById('catalogTableContainer');
-
-            if (view === 'grid') {
-                gridBtn.className = "p-1.5 rounded text-indigo-600 bg-white shadow-xs cursor-pointer";
-                tableBtn.className = "p-1.5 rounded text-slate-500 hover:text-slate-800 cursor-pointer";
-                gridContainer.classList.remove('hidden');
-                tableContainer.classList.add('hidden');
-            } else {
-                tableBtn.className = "p-1.5 rounded text-indigo-600 bg-white shadow-xs cursor-pointer";
-                gridBtn.className = "p-1.5 rounded text-slate-500 hover:text-slate-800 cursor-pointer";
-                tableContainer.classList.remove('hidden');
-                gridContainer.classList.add('hidden');
-            }
-        }
-
-        window.switchTab = function(tab) {
-            activeTab = tab;
-            const catalogSec = document.getElementById('sectionCatalog');
-            const issuedSec = document.getElementById('sectionIssued');
-            const adminSec = document.getElementById('sectionAdmin');
-
-            const catBtn = document.getElementById('tabCatalogBtn');
-            const issBtn = document.getElementById('tabIssuedBtn');
-            const admBtn = document.getElementById('tabAdminPanelBtn');
-
-            catalogSec.classList.add('hidden');
-            issuedSec.classList.add('hidden');
-            adminSec.classList.add('hidden');
-
-            catBtn.className = "flex-1 sm:flex-none px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors flex items-center justify-center space-x-1.5 cursor-pointer";
-            issBtn.className = "flex-1 sm:flex-none px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors flex items-center justify-center space-x-1.5 cursor-pointer";
-            admBtn.className = "hidden px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors flex items-center justify-center space-x-1.5 border border-amber-200 bg-amber-50/50 text-amber-800 cursor-pointer";
-            if (isAdminLoggedIn) admBtn.classList.remove('hidden');
-
-            if (tab === 'catalog') {
-                catalogSec.classList.remove('hidden');
-                catBtn.className = "flex-1 sm:flex-none px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-colors flex items-center justify-center space-x-1.5 bg-indigo-600 text-white cursor-pointer";
-            } else if (tab === 'issued') {
-                issuedSec.classList.remove('hidden');
-                issBtn.className = "flex-1 sm:flex-none px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-colors flex items-center justify-center space-x-1.5 bg-indigo-600 text-white cursor-pointer";
-            } else if (tab === 'admin' && isAdminLoggedIn) {
-                adminSec.classList.remove('hidden');
-                admBtn.className = "px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-colors flex items-center justify-center space-x-1.5 border border-amber-300 bg-amber-100 text-amber-900 shadow-xs cursor-pointer";
-            }
-        }
-
-        window.promptUserLogin = function() {
-            const name = prompt("Enter your borrower name (for easy issue/return):", currentBorrowerName);
-            if (name !== null && name.trim() !== "") {
-                currentBorrowerName = name.trim();
-                localStorage.setItem('hisab_borrower_name', currentBorrowerName);
-                document.getElementById('currentUserNameDisplay').textContent = currentBorrowerName;
-                showToast("Borrower profile updated to: " + currentBorrowerName, "success");
-                filterBooks();
-            }
-        }
-
-        window.openAdminLoginModal = function() {
-            document.getElementById('adminModal').classList.remove('hidden');
-            document.getElementById('adminPassInput').value = '';
-            document.getElementById('adminPassInput').focus();
-        }
-
-        window.closeAdminLoginModal = function() {
-            document.getElementById('adminModal').classList.add('hidden');
-        }
-
-        window.verifyAdminPassword = function(e) {
-            e.preventDefault();
-            const pass = document.getElementById('adminPassInput').value;
-            if (pass === "123321") {
-                isAdminLoggedIn = true;
-                closeAdminLoginModal();
-                document.getElementById('adminLoginBtn').classList.add('hidden');
-                document.getElementById('adminLogoutBtn').classList.remove('hidden');
-                document.getElementById('tabAdminPanelBtn').classList.remove('hidden');
-                showToast("Admin Logged In Successfully!", "success");
-                filterBooks();
-                switchTab('admin');
-            } else {
-                showToast("Incorrect Admin Password!", "error");
-            }
-        }
-
-        window.adminLogout = function() {
-            isAdminLoggedIn = false;
-            document.getElementById('adminLoginBtn').classList.remove('hidden');
-            document.getElementById('adminLogoutBtn').classList.add('hidden');
-            document.getElementById('tabAdminPanelBtn').classList.add('hidden');
-            showToast("Logged out from Admin", "info");
-            filterBooks();
-            switchTab('catalog');
-        }
-
-        window.openIssueModal = function(key, encodedTitle, bookNum) {
-            document.getElementById('issueModalBookNum').value = key;
-            document.getElementById('issueModalBookTitle').textContent = decodeURIComponent(encodedTitle) + " (" + bookNum + ")";
-            document.getElementById('issueBorrowerName').value = currentBorrowerName !== 'Guest User' ? currentBorrowerName : '';
-            document.getElementById('issueDate').valueAsDate = new Date();
-            document.getElementById('issueBookModal').classList.remove('hidden');
-        }
-
-        window.closeIssueModal = function() {
-            document.getElementById('issueBookModal').classList.add('hidden');
-        }
-
-        window.confirmIssueBook = function(e) {
-            e.preventDefault();
-            const key = document.getElementById('issueModalBookNum').value;
-            const borrower = document.getElementById('issueBorrowerName').value.trim();
-            const date = document.getElementById('issueDate').value;
-
-            if (!borrower) return;
-
-            set(ref(db, activePath + '/' + key + '/status'), 'Issued');
-            set(ref(db, activePath + '/' + key + '/issuedTo'), borrower);
-            set(ref(db, activePath + '/' + key + '/issueDate'), date);
-
-            closeIssueModal();
-            showToast("Book issued successfully to " + borrower, "success");
-        }
-
-        window.quickIssue = function(key) {
-            if (currentBorrowerName === 'Guest User') {
-                promptUserLogin();
-                if (currentBorrowerName === 'Guest User') return;
-            }
-            if (confirm(`Do you want to borrow this book as "${currentBorrowerName}"?`)) {
-                const today = new Date().toISOString().split('T')[0];
-                set(ref(db, activePath + '/' + key + '/status'), 'Issued');
-                set(ref(db, activePath + '/' + key + '/issuedTo'), currentBorrowerName);
-                set(ref(db, activePath + '/' + key + '/issueDate'), today);
-                showToast("Book borrowed successfully!", "success");
-            }
-        }
-
-        window.returnBook = function(key) {
-            const book = booksData[key];
-            const issuedTo = book ? book.issuedTo : '';
-            if (!isAdminLoggedIn && issuedTo && currentBorrowerName && issuedTo.toLowerCase() !== currentBorrowerName.toLowerCase()) {
-                alert("Only the borrower (" + issuedTo + ") or Admin can return this book!");
-                return;
-            }
-
-            if (confirm("Are you sure you want to return this book?")) {
-                set(ref(db, activePath + '/' + key + '/status'), 'Available');
-                set(ref(db, activePath + '/' + key + '/issuedTo'), "");
-                set(ref(db, activePath + '/' + key + '/issueDate'), "");
-                showToast("Book returned successfully!", "success");
-            }
-        }
-
-        window.deleteBook = function(key) {
-            if (!isAdminLoggedIn) {
-                alert("Admin privileges required to delete books.");
-                return;
-            }
-            if (confirm("Are you sure you want to delete this book from the database?")) {
-                remove(ref(db, activePath + '/' + key)).then(() => {
-                    showToast("Book deleted successfully!", "success");
-                }).catch(err => {
-                    showToast("Error deleting book: " + err.message, "error");
-                });
-            }
-        }
-
-        window.handleAddBook = function(e) {
-            e.preventDefault();
-            const bookNum = document.getElementById('addBookNum').value.trim();
-            const categoryElem = document.getElementById('addBookCategory');
-            const category = categoryElem.value.trim();
-            const title = document.getElementById('addBookTitle').value.trim();
-            const author = document.getElementById('addBookAuthor').value.trim();
-
-            if (!bookNum || !category || !title || !author) return;
-
-            const newBookRef = ref(db, activePath + '/' + bookNum.replace(/[.#$\/\[\]]/g, '_'));
-            set(newBookRef, {
-                bookNum: bookNum,
-                category: category,
-                title: title,
-                author: author,
-                status: "Available",
-                issuedTo: "",
-                issueDate: ""
-            }).then(() => {
-                showToast("Book added & synced successfully!", "success");
-                document.getElementById('addBookForm').reset();
-            }).catch(err => {
-                showToast("Error adding book: " + err.message, "error");
-            });
-        }
-
-        window.handleAddCategory = function(e) {
-            e.preventDefault();
-            const newCat = document.getElementById('newCategoryInput').value.trim();
-            if (!newCat) return;
-            if (!categoriesData.includes(newCat)) {
-                categoriesData.push(newCat);
-                set(ref(db, 'libraryData/categories'), categoriesData).catch(() => {
-                    set(ref(db, 'categories'), categoriesData);
-                });
-                populateCategoryDropdowns();
-                renderAdminCategories();
-                document.getElementById('newCategoryInput').value = '';
-                showToast("Category added successfully!", "success");
-            } else {
-                showToast("Category already exists!", "error");
-            }
-        }
-
-        window.renderAdminCategories = function() {
-            const list = document.getElementById('adminCategoryList');
-            if (!list) return;
-            list.innerHTML = '';
-            categoriesData.forEach((cat, idx) => {
-                const item = document.createElement('div');
-                item.className = "flex justify-between items-center bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-medium text-slate-700";
-                item.innerHTML = `<span>${cat}</span>`;
-                list.appendChild(item);
-            });
-        }
-
-        window.showToast = function(message, type = 'success') {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            const bgClass = type === 'success' ? 'bg-emerald-600' : (type === 'error' ? 'bg-rose-600' : 'bg-indigo-600');
-            toast.className = `${bgClass} text-white px-4 py-2 rounded-xl shadow-lg text-xs font-medium transform transition-all duration-300 translate-y-2 opacity-0`;
-            toast.textContent = message;
-            container.appendChild(toast);
-            setTimeout(() => { toast.classList.remove('translate-y-2', 'opacity-0'); }, 10);
-            setTimeout(() => {
-                toast.classList.add('translate-y-2', 'opacity-0');
-                setTimeout(() => { toast.remove(); }, 300);
-            }, 3000);
-        }
-    </script>
-</body>
-</html>
+                            <button type="submit" class="bg-indigo-600 hover:bg-indigo-
