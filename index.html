@@ -519,7 +519,6 @@
                 const isIssued = status === 'Issued';
                 const cat = book.category || 'General';
 
-                // Action button logic for grid card bottom
                 let actionButtonHtml = '';
                 if (isAdminLoggedIn) {
                     if (isIssued) {
@@ -539,7 +538,7 @@
                     }
                 }
 
-                // Delete button for Admin only
+                // Delete button for admin view only
                 const deleteBtnHtml = isAdminLoggedIn ? `<button onclick="deleteBook('${key}')" class="text-rose-400 hover:text-rose-600 p-1 cursor-pointer" title="Delete Book"><i class="fa-solid fa-trash text-xs"></i></button>` : '';
 
                 const card = document.createElement('div');
@@ -557,13 +556,10 @@
                         <p class="text-xs text-slate-500 line-clamp-1 mb-2">${book.author}</p>
                         <span class="inline-block text-[11px] text-slate-600 bg-slate-100 px-2 py-0.5 rounded mb-3">${cat}</span>
                     </div>
-                    <div class="pt-2 border-t border-slate-100">
-                        ${actionButtonHtml}
-                    </div>
+                    <div class="pt-2 border-t border-slate-100">${actionButtonHtml}</div>
                 `;
                 gridContainer.appendChild(card);
 
-                // Table Row Action
                 let tableActionHtml = '';
                 if (isAdminLoggedIn) {
                     tableActionHtml = isIssued ? 
@@ -589,7 +585,7 @@
                     </td>
                     <td class="py-2.5 px-3 text-right flex items-center justify-end space-x-2">
                         ${tableActionHtml}
-                        ${isAdminLoggedIn ? `<button onclick="deleteBook('${key}')" class="text-rose-500 hover:text-rose-700 p-1 cursor-pointer"><i class="fa-solid fa-trash text-xs"></i></button>` : ''}
+                        ${isAdminLoggedIn ? `<button onclick="deleteBook('${key}')" class="text-rose-500 hover:text-rose-700 p-1 cursor-pointer" title="Delete Book"><i class="fa-solid fa-trash text-xs"></i></button>` : ''}
                     </td>
                 `;
                 tableBody.appendChild(row);
@@ -599,6 +595,7 @@
         window.renderIssuedList = function() {
             const issuedBody = document.getElementById('issuedTableBody');
             const emptyIssued = document.getElementById('emptyIssuedState');
+            if(!issuedBody || !emptyIssued) return;
             issuedBody.innerHTML = '';
 
             const issuedEntries = Object.entries(booksData).filter(([k, b]) => b && b.status === 'Issued');
@@ -612,7 +609,7 @@
                 const isOwnerOrAdmin = isAdminLoggedIn || (book.issuedTo && currentBorrowerName && book.issuedTo.toLowerCase() === currentBorrowerName.toLowerCase());
                 const returnBtnHtml = isOwnerOrAdmin ? 
                     `<button onclick="returnBook('${key}')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-semibold px-2.5 py-1 rounded shadow-xs cursor-pointer">Return Book</button>` :
-                    `<span class="text-xs text-slate-400 font-medium">Restricted to Borrower/Admin</span>`;
+                    `<span class="text-xs text-slate-400 font-medium">Restricted</span>`;
 
                 const row = document.createElement('tr');
                 row.className = "hover:bg-slate-50";
@@ -624,9 +621,7 @@
                     </td>
                     <td class="py-2.5 px-3 font-medium text-slate-700">${book.issuedTo || 'Unknown'}</td>
                     <td class="py-2.5 px-3 text-slate-600">${book.issueDate || 'N/A'}</td>
-                    <td class="py-2.5 px-3 text-right">
-                        ${returnBtnHtml}
-                    </td>
+                    <td class="py-2.5 px-3 text-right">${returnBtnHtml}</td>
                 `;
                 issuedBody.appendChild(row);
             });
@@ -657,222 +652,3 @@
             const catalogSec = document.getElementById('sectionCatalog');
             const issuedSec = document.getElementById('sectionIssued');
             const adminSec = document.getElementById('sectionAdmin');
-
-            const catBtn = document.getElementById('tabCatalogBtn');
-            const issBtn = document.getElementById('tabIssuedBtn');
-            const admBtn = document.getElementById('tabAdminPanelBtn');
-
-            catalogSec.classList.add('hidden');
-            issuedSec.classList.add('hidden');
-            adminSec.classList.add('hidden');
-
-            catBtn.className = "flex-1 sm:flex-none px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors flex items-center justify-center space-x-1.5 cursor-pointer";
-            issBtn.className = "flex-1 sm:flex-none px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors flex items-center justify-center space-x-1.5 cursor-pointer";
-            admBtn.className = "hidden px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors flex items-center justify-center space-x-1.5 border border-amber-200 bg-amber-50/50 text-amber-800 cursor-pointer";
-            if (isAdminLoggedIn) admBtn.classList.remove('hidden');
-
-            if (tab === 'catalog') {
-                catalogSec.classList.remove('hidden');
-                catBtn.className = "flex-1 sm:flex-none px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-colors flex items-center justify-center space-x-1.5 bg-indigo-600 text-white cursor-pointer";
-            } else if (tab === 'issued') {
-                issuedSec.classList.remove('hidden');
-                issBtn.className = "flex-1 sm:flex-none px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-colors flex items-center justify-center space-x-1.5 bg-indigo-600 text-white cursor-pointer";
-            } else if (tab === 'admin' && isAdminLoggedIn) {
-                adminSec.classList.remove('hidden');
-                admBtn.className = "px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-colors flex items-center justify-center space-x-1.5 border border-amber-300 bg-amber-100 text-amber-900 shadow-xs cursor-pointer";
-            }
-        }
-
-        window.promptUserLogin = function() {
-            const name = prompt("Enter your borrower name (for easy issue/return):", currentBorrowerName);
-            if (name !== null && name.trim() !== "") {
-                currentBorrowerName = name.trim();
-                localStorage.setItem('hisab_borrower_name', currentBorrowerName);
-                document.getElementById('currentUserNameDisplay').textContent = currentBorrowerName;
-                showToast("Borrower profile updated to: " + currentBorrowerName, "success");
-                filterBooks();
-            }
-        }
-
-        window.openAdminLoginModal = function() {
-            document.getElementById('adminModal').classList.remove('hidden');
-            document.getElementById('adminPassInput').value = '';
-            document.getElementById('adminPassInput').focus();
-        }
-
-        window.closeAdminLoginModal = function() {
-            document.getElementById('adminModal').classList.add('hidden');
-        }
-
-        window.verifyAdminPassword = function(e) {
-            e.preventDefault();
-            const pass = document.getElementById('adminPassInput').value;
-            if (pass === "123321") {
-                isAdminLoggedIn = true;
-                closeAdminLoginModal();
-                document.getElementById('adminLoginBtn').classList.add('hidden');
-                document.getElementById('adminLogoutBtn').classList.remove('hidden');
-                document.getElementById('tabAdminPanelBtn').classList.remove('hidden');
-                showToast("Admin Logged In Successfully!", "success");
-                filterBooks();
-                switchTab('admin');
-            } else {
-                showToast("Incorrect Admin Password!", "error");
-            }
-        }
-
-        window.adminLogout = function() {
-            isAdminLoggedIn = false;
-            document.getElementById('adminLoginBtn').classList.remove('hidden');
-            document.getElementById('adminLogoutBtn').classList.add('hidden');
-            document.getElementById('tabAdminPanelBtn').classList.add('hidden');
-            showToast("Logged out from Admin", "info");
-            filterBooks();
-            switchTab('catalog');
-        }
-
-        window.openIssueModal = function(key, encodedTitle, bookNum) {
-            document.getElementById('issueModalBookNum').value = key;
-            document.getElementById('issueModalBookTitle').textContent = decodeURIComponent(encodedTitle) + " (" + bookNum + ")";
-            document.getElementById('issueBorrowerName').value = currentBorrowerName !== 'Guest User' ? currentBorrowerName : '';
-            document.getElementById('issueDate').valueAsDate = new Date();
-            document.getElementById('issueBookModal').classList.remove('hidden');
-        }
-
-        window.closeIssueModal = function() {
-            document.getElementById('issueBookModal').classList.add('hidden');
-        }
-
-        window.confirmIssueBook = function(e) {
-            e.preventDefault();
-            const key = document.getElementById('issueModalBookNum').value;
-            const borrower = document.getElementById('issueBorrowerName').value.trim();
-            const date = document.getElementById('issueDate').value;
-
-            if (!borrower) return;
-
-            set(ref(db, activePath + '/' + key + '/status'), 'Issued');
-            set(ref(db, activePath + '/' + key + '/issuedTo'), borrower);
-            set(ref(db, activePath + '/' + key + '/issueDate'), date);
-
-            closeIssueModal();
-            showToast("Book issued successfully to " + borrower, "success");
-        }
-
-        window.quickIssue = function(key) {
-            if (currentBorrowerName === 'Guest User') {
-                promptUserLogin();
-                if (currentBorrowerName === 'Guest User') return;
-            }
-            if (confirm(`Do you want to borrow this book as "${currentBorrowerName}"?`)) {
-                const today = new Date().toISOString().split('T')[0];
-                set(ref(db, activePath + '/' + key + '/status'), 'Issued');
-                set(ref(db, activePath + '/' + key + '/issuedTo'), currentBorrowerName);
-                set(ref(db, activePath + '/' + key + '/issueDate'), today);
-                showToast("Book borrowed successfully!", "success");
-            }
-        }
-
-        window.returnBook = function(key) {
-            const book = booksData[key];
-            const issuedTo = book ? book.issuedTo : '';
-            if (!isAdminLoggedIn && issuedTo && currentBorrowerName && issuedTo.toLowerCase() !== currentBorrowerName.toLowerCase()) {
-                alert("Only the borrower (" + issuedTo + ") or Admin can return this book!");
-                return;
-            }
-
-            if (confirm("Are you sure you want to return this book?")) {
-                set(ref(db, activePath + '/' + key + '/status'), 'Available');
-                set(ref(db, activePath + '/' + key + '/issuedTo'), "");
-                set(ref(db, activePath + '/' + key + '/issueDate'), "");
-                showToast("Book returned successfully!", "success");
-            }
-        }
-
-        window.deleteBook = function(key) {
-            if (!isAdminLoggedIn) {
-                alert("Admin privileges required to delete books.");
-                return;
-            }
-            if (confirm("Are you sure you want to delete this book from the database?")) {
-                remove(ref(db, activePath + '/' + key)).then(() => {
-                    showToast("Book deleted successfully!", "success");
-                }).catch(err => {
-                    showToast("Error deleting book: " + err.message, "error");
-                });
-            }
-        }
-
-        window.handleAddBook = function(e) {
-            e.preventDefault();
-            const bookNum = document.getElementById('addBookNum').value.trim();
-            const categoryElem = document.getElementById('addBookCategory');
-            const category = categoryElem.value.trim();
-            const title = document.getElementById('addBookTitle').value.trim();
-            const author = document.getElementById('addBookAuthor').value.trim();
-
-            if (!bookNum || !category || !title || !author) return;
-
-            const newBookRef = ref(db, activePath + '/' + bookNum.replace(/[.#$\/\[\]]/g, '_'));
-            set(newBookRef, {
-                bookNum: bookNum,
-                category: category,
-                title: title,
-                author: author,
-                status: "Available",
-                issuedTo: "",
-                issueDate: ""
-            }).then(() => {
-                showToast("Book added & synced successfully!", "success");
-                document.getElementById('addBookForm').reset();
-            }).catch(err => {
-                showToast("Error adding book: " + err.message, "error");
-            });
-        }
-
-        window.handleAddCategory = function(e) {
-            e.preventDefault();
-            const newCat = document.getElementById('newCategoryInput').value.trim();
-            if (!newCat) return;
-            if (!categoriesData.includes(newCat)) {
-                categoriesData.push(newCat);
-                set(ref(db, 'libraryData/categories'), categoriesData).catch(() => {
-                    set(ref(db, 'categories'), categoriesData);
-                });
-                populateCategoryDropdowns();
-                renderAdminCategories();
-                document.getElementById('newCategoryInput').value = '';
-                showToast("Category added successfully!", "success");
-            } else {
-                showToast("Category already exists!", "error");
-            }
-        }
-
-        window.renderAdminCategories = function() {
-            const list = document.getElementById('adminCategoryList');
-            if (!list) return;
-            list.innerHTML = '';
-            categoriesData.forEach((cat, idx) => {
-                const item = document.createElement('div');
-                item.className = "flex justify-between items-center bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-medium text-slate-700";
-                item.innerHTML = `<span>${cat}</span>`;
-                list.appendChild(item);
-            });
-        }
-
-        window.showToast = function(message, type = 'success') {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            const bgClass = type === 'success' ? 'bg-emerald-600' : (type === 'error' ? 'bg-rose-600' : 'bg-indigo-600');
-            toast.className = `${bgClass} text-white px-4 py-2 rounded-xl shadow-lg text-xs font-medium transform transition-all duration-300 translate-y-2 opacity-0`;
-            toast.textContent = message;
-            container.appendChild(toast);
-            setTimeout(() => { toast.classList.remove('translate-y-2', 'opacity-0'); }, 10);
-            setTimeout(() => {
-                toast.classList.add('translate-y-2', 'opacity-0');
-                setTimeout(() => { toast.remove(); }, 300);
-            }, 3000);
-        }
-    </script>
-</body>
-</html>
