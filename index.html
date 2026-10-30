@@ -4,11 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HISAB LIBRARY & QUTHUBKHANA - Digital Catalog System</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts Inter, Manjari & Arabic Amiri -->
     <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Manjari:wght@400;700&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
@@ -50,7 +47,7 @@
                     </div>
                 </div>
 
-                <!-- Section Selector Switch Button (Added Back) -->
+                <!-- Section Selector Switch -->
                 <div class="flex items-center space-x-1 bg-indigo-950/70 p-1 rounded-xl border border-indigo-700/60">
                     <button onclick="switchSection('library')" id="sectionLibBtn" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-amber-500 text-indigo-950 shadow cursor-pointer">
                         <i class="fa-solid fa-book-bookmark mr-1"></i> Library
@@ -91,44 +88,4 @@
         <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4 mb-4 sm:mb-6">
             <div class="bg-white p-3 sm:p-4 rounded-xl shadow-sm border border-slate-200/80 flex items-center justify-between">
                 <div>
-                    <p class="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-slate-400">Available Books</p>
-                    <h3 id="statAvailableBooks" class="text-xl sm:text-2xl font-bold text-emerald-600 mt-0.5">0</h3>
-                </div>
-                <div class="p-2 sm:p-3 bg-emerald-50 rounded-xl text-emerald-600">
-                    <i class="fa-solid fa-book-open text-base sm:text-xl"></i>
-                </div>
-            </div>
-
-            <div class="bg-white p-3 sm:p-4 rounded-xl shadow-sm border border-slate-200/80 flex items-center justify-between">
-                <div>
-                    <p class="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-slate-400">Issued Books</p>
-                    <h3 id="statIssuedBooks" class="text-xl sm:text-2xl font-bold text-amber-600 mt-0.5">0</h3>
-                </div>
-                <div class="p-2 sm:p-3 bg-amber-50 rounded-xl text-amber-600">
-                    <i class="fa-solid fa-book-bookmark text-base sm:text-xl"></i>
-                </div>
-            </div>
-
-            <div class="bg-white p-3 sm:p-4 rounded-xl shadow-sm border border-slate-200/80 flex items-center justify-between">
-                <div>
-                    <p class="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-slate-400">Categories</p>
-                    <h3 id="statCategories" class="text-xl sm:text-2xl font-bold text-indigo-600 mt-0.5">0</h3>
-                </div>
-                <div class="p-2 sm:p-3 bg-indigo-50 rounded-xl text-indigo-600">
-                    <i class="fa-solid fa-layer-group text-base sm:text-xl"></i>
-                </div>
-            </div>
-
-            <div class="bg-white p-3 sm:p-4 rounded-xl shadow-sm border border-slate-200/80 flex items-center justify-between">
-                <div>
-                    <p class="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-slate-400">Total Collection</p>
-                    <h3 id="statTotalBooks" class="text-xl sm:text-2xl font-bold text-blue-600 mt-0.5">0</h3>
-                </div>
-                <div class="p-2 sm:p-3 bg-blue-50 rounded-xl text-blue-600">
-                    <i class="fa-solid fa-books text-base sm:text-xl"></i>
-                </div>
-            </div>
-        </div>
-
-        <!-- Navigation Tabs Bar -->
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200/80 p-1.5 mb-4 sm:mb-6 flex flex-col sm:flex-row gap-2 justify-
+                    <p class="text-
